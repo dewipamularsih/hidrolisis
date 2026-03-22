@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔍 Cek Sifat Makanan Minuman Anda (Asam/Basa/Netral)</title>
+  <meta name="description" content="App interaktif cek pH makanan minuman, simulasi campur, quiz, analisis kebiasaan harian.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Modern App-like Glassmorphism Design */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-gradient: linear-gradient(135deg, #f7f7f7 0%, #000000 50%, #f093fb 100%);
+      --glass-bg: rgba(255,255,255,0.1);
+      --glass-blur: blur(20px);
+      --shadow-soft: 0 8px 32px rgba(31,38,135,0.37);
+      --accent-blue: #4facfe;
+      --accent-purple: #a55eea;
+      --accent-pink: #f093fb;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgb(255, 255, 255);
+      backdrop-filter: var(--glass-blur);
+      border-radius: 24px;
+      border: 1px solid rgba(101, 93, 93, 0.637);
+      box-shadow: var(--shadow-soft);
+      padding: 2rem;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .glass-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(31,38,135,0.4);
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+    header {
+      text-align: center; padding: 3rem 1rem; color: white;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 700; margin-bottom: 1rem;
+      background: linear-gradient(45deg, #fff, #f0f0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .subtitle { font-size: 1.3rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+    
+    /* Navigation Tabs */
+    .tabs { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
+    .tab-btn {
+      padding: 1rem 2rem; background: rgba(255,255,255,0.1); color: white; border: none;
+      border-radius: 50px; font-weight: 500; cursor: pointer; transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: rgba(255,255,255,0.25); transform: translateY(-2px);
+    }
+    
+    /* Sections */
+    section { display: none; animation: slideIn 0.6s ease; }
+    section.active { display: block; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    
+    /* Food Checker */
+    .food-search { max-width: 500px; margin: 2rem auto; }
+    #food-input { 
+      width: 100%; padding: 1.2rem 1.5rem; border: none; border-radius: 16px; font-size: 1.1rem;
+      background: rgba(255,255,255,0.2); color: white; backdrop-filter: blur(10px);
+    }
+    .dropdown {
+      position: absolute; top: 100%; left: 0; right: 0; background: rgba(255,255,255,0.95);
+      border-radius: 0 0 16px 16px; max-height: 200px; overflow-y: auto; z-index: 10;
+    }
+    .dropdown-item { padding: 1rem; cursor: pointer; border-bottom: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; gap: 1rem; }
+    .dropdown-item:hover { background: rgba(102,126,234,0.1); }
+    
+    .result-card {
+      margin-top: 2rem; text-align: center; padding: 2.5rem;
+    }
+    .ph-circle {
+      width: 120px; height: 120px; border-radius: 50%; margin: 1rem auto; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 700; border: 4px solid rgba(255,255,255,0.3);
+    }
+    .ph-acid { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); color: white; }
+    .ph-neutral { background: linear-gradient(135deg, #51cf66, #74c69d); color: white; }
+    .ph-basic { background: linear-gradient(135deg, #4facfe, #74c0fc); color: white; }
+    
+    /* Mixture Simulation */
+    .mixture-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .mixture-item { text-align: center; cursor: pointer; padding: 1rem; border-radius: 16px; transition: all 0.3s; }
+    .mixture-item.active { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+    .mixture-item i { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+    
+    /* pH Slider */
+    .slider-container { text-align: center; margin: 2rem 0; }
+    #ph-slider { width: 80%; margin: 1rem auto; }
+    .ph-examples {
+      display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;
+    }
+    .ph-range {
+      background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; min-width: 120px;
+      backdrop-filter: blur(10px);
+    }
+    
+    /* Quiz */
+    .quiz-container { max-width: 600px; margin: 2rem auto; }
+    .question { margin-bottom: 1.5rem; font-size: 1.2rem; font-weight: 500; }
+    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+    .option-btn {
+      padding: 1rem 1.5rem; border: none; border-radius: 16px; background: rgba(255,255,255,0.2);
+      color: white; cursor: pointer; transition: all 0.3s; font-size: 1rem; text-align: left;
+    }
+    .option-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+    .option-btn.correct { background: linear-gradient(135deg, #51cf66, #74c69d); }
+    .option-btn.wrong { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); }
+    
+    /* Habits */
+    .habits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+    .habit-item {
+      display: flex; align-items: center; gap: 1rem; padding: 1.2rem; background: rgba(255,255,255,0.15);
+      border-radius: 16px; cursor: pointer; transition: all 0.3s;
+    }
+    .habit-item.checked { background: rgba(81,207,102,0.3); }
+    .habit-item i { font-size: 1.5rem; }
+    
+    /* Daily Tips */
+    .tips-list { display: grid; gap: 1rem; }
+    .tip { padding: 1.5rem; background: rgba(255,255,255,0.2); border-radius: 16px; backdrop-filter: blur(10px); }
+    
+    /* Dark Mode */
+    [data-theme="dark"] { 
+      --glass-bg: rgba(0,0,0,0.2);
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+    .dark-toggle { position: fixed; top: 2rem; right: 2rem; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; z-index: 1000; }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .tabs { flex-direction: column; align-items: center; }
+      .options { grid-template-columns: 1fr; }
+      .mixture-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .fade-in { animation: fadeInUp 0.6s ease forwards; opacity: 0; }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <!-- Dark Mode Toggle -->
+  <button class="dark-toggle" onclick="toggleDark()" title="Dark Mode"><i class="fas fa-moon"></i></button>
+
+  <div class="container">
+    <!-- Hero -->
+    <header>
+      <h1>🔍 Cek Sifat Makanan Anda</h1>
+      <p class="subtitle">Asam • Basa • Netral | Dampak Hidrolisis Garam pada Tubuh | Gunakan Setiap Hari!</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('checker')">Cek Makanan</button>
+      <button class="tab-btn" onclick="showTab('simulation')">Campur Simulasi</button>
+      <button class="tab-btn" onclick="showTab('ph-visual')">Visual pH</button>
+      <button class="tab-btn" onclick="showTab('quiz')">Quiz</button>
+      <button class="tab-btn" onclick="showTab('habits')">Kebiasaan Hari Ini</button>
+      <button class="tab-btn" onclick="showTab('tips')">Tips Harian</button>
+    </div>
+
+    <!-- Food Checker -->
+    <section id="checker" class="active">
+      <div class="glass-card">
+        <h2><i class="fas fa-search"></i> Cek Makanan Minuman</h2>
+        <div class="food-search">
+          <input type="text" id="food-input" placeholder="Ketik nama makanan (kopi, susu, soda...)" autocomplete="off">
+          <div id="dropdown" class="dropdown hidden"></div>
+        </div>
+        <div id="food-result" class="result-card hidden"></div>
+      </div>
+    </section>
+
+    <!-- Mixture Simulation -->
+<section id="simulation">
+  <div class="glass-card">
+    <h2><i class="fas fa-flask"></i> Simulasi Campuran</h2>
+
+    <div class="mixture-grid">
+
+      <div class="mixture-item" onclick="selectMixture('coffee')">
+        <i class="fas fa-mug-hot"></i>
+        <span>Kopi (Asam)</span>
+      </div>
+
+<div class="mixture-item" onclick="selectMixture('milk')">
+  <i class="fas fa-glass-water"></i>
+  <span>🥛 Susu (Netral)</span>
+</div>
+
+      <div class="mixture-item" onclick="selectMixture('soda')">
+        <i class="fas fa-glass-water"></i>
+        <span>Soda (Asam)</span>
+      </div>
+
+      <div class="mixture-item" onclick="selectMixture('baking')">
+        <i class="fas fa-prescription-bottle"></i>
+        <span>Baking Soda (Basa)</span>
+      </div>
+
+    </div>
+
+    <div id="mixture-result" class="result-card hidden" style="margin-top: 2rem;"></div>
+  </div>
+</section>
+
+    <!-- pH Visual -->
+    <section id="ph-visual">
+      <div class="glass-card">
+        <h2><i class="fas fa-sliders-h"></i> Visual pH Interaktif</h2>
+        <div class="slider-container">
+          <input type="range" id="ph-slider" min="0" max="14" value="7">
+          <div id="ph-display" class="ph-circle ph-neutral">7.0</div>
+          <div class="ph-examples">
+            <div class="ph-range ph-acid">
+              <div style="font-weight: 700; color: #ff4757;">0-6</div>
+              <small>Cola, Kopi, Jeruk</small>
+            </div>
+            <div class="ph-range ph-neutral">
+              <div style="font-weight: 700; color: #2ed573;">7</div>
+              <small>Air Putih</small>
+            </div>
+            <div class="ph-range ph-basic">
+              <div style="font-weight: 700; color: #3742fa;">8-14</div>
+              <small>Baking Soda, Sabun</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz">
+      <div class="glass-card quiz-container">
+        <h2><i class="fas fa-gamepad"></i> Quick Quiz</h2>
+        <div id="quiz-content">
+          <div class="question fade-in">Siap tantangan kimia harian? <button onclick="startGameQuiz()" class="tab-btn">Mulai Quiz 🎮</button></div>
+        </div>
+        <div id="quiz-score" class="hidden" style="text-align: center; margin-top: 2rem;">
+          <div id="emoji-score" style="font-size: 4rem;"></div>
+          <div id="final-score" style="font-size: 1.5rem; font-weight: 700;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Habits -->
+    <section id="habits">
+      <div class="glass-card">
+        <h2><i class="fas fa-chart-line"></i> Kebiasaan Hari Ini</h2>
+        <div class="habits-grid">
+          <label class="habit-item" onclick="toggleHabit(this, 'coffee')">
+            <input type="checkbox" style="display:none;">
+            <i class="fas fa-coffee"></i> Kopi Pagi ☕
+          </label>
+          <label class="habit-item" onclick="toggleHabit(this, 'fried')">
+            <input type="checkbox" style="display:none;">
+            <i class="fas fa-drumstick-bite"></i> Gorengan Siang 🍗
+          </label>
+          <label class="habit-item" onclick="toggleHabit(this, 'soda')">
+            <input type="checkbox" style="display:none;">
+            <i class="fas fa-wine-glass-alt"></i> Soda Sore 🥤
+          </label>
+          <label class="habit-item" onclick="toggleHabit(this, 'milk')">
+            <input type="checkbox" style="display:none;">
+            <i class="fas fa-glass-whiskey"></i> Susu Malam 🥛
+          </label>
+        </div>
+        <div id="habit-analysis" class="result-card hidden"></div>
+        <button onclick="resetHabits()" class="tab-btn" style="margin-top: 1rem;">Reset Hari Ini</button>
+      </div>
+    </section>
+
+    <!-- Daily Tips -->
+    <section id="tips">
+      <div class="glass-card">
+        <h2><i class="fas fa-lightbulb"></i> Tips Harian</h2>
+        <div class="tips-list">
+          <div class="tip fade-in">
+            <i class="fas fa-water" style="color: #4facfe;"></i>
+            <strong>Bilas mulut dengan air</strong> setelah kopi/soda (netralkan asam)
+          </div>
+          <div class="tip fade-in">
+            <i class="fas fa-cheese" style="color: #ffd93d;"></i>
+            <strong>Keju setelah makanan asam</strong> (kalsium lindungi enamel)
+          </div>
+          <div class="tip fade-in">
+            <i class="fas fa-cookie-bite" style="color: #ff6b6b;"></i>
+            <strong>Permen karet 20 menit</strong> setelah makan (tingkatkan air liur)
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Audio for clicks (optional) -->
+  <audio id="click-sound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEA..." type="audio/wav">
+  </audio>
+
+  <script>
+    // Data Makanan (relasi hidrolisis garam)
+    const foodsData = [
+      { name: 'Kopi ☕', property: 'Asam', ph: 5.0, hydrolysis: 'Asam organik + garam', effect: 'Noda gigi & iritasi lambung', icon: 'fas fa-coffee' },
+      { name: 'Susu 🥛', property: 'Netral', ph: 6.5, hydrolysis: 'Garam laktat netral', effect: 'Pelindung enamel gigi', icon: 'fas fa-glass-whiskey' },
+      { name: 'Soda 🥤', property: 'Asam', ph: 2.5, hydrolysis: 'Fosfat asam', effect: 'Erosi gigi cepat', icon: 'fas fa-wine-glass-alt' },
+      { name: 'Mie Instan 🍜', property: 'Asam', ph: 4.5, hydrolysis: 'MSG + pengawet', effect: 'Iritasi lambung', icon: 'fas fa-utensils' },
+      { name: 'Baking Soda 🧂', property: 'Basa', ph: 9.0, hydrolysis: 'HCO₃⁻ → OH⁻', effect: 'Netral asam lambung', icon: 'fas fa-bread-slice' },
+      { name: 'Yogurt 🥛', property: 'Asam', ph: 4.5, hydrolysis: 'Asam laktat', effect: 'Probiotik baik pencernaan', icon: 'fas fa-utensils' }
+    ];
+
+    let selectedMixture = [];
+
+    // Tab Navigation
+    function showTab(tab) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tab).classList.add('active');
+    }
+
+    // Food Search
+    const foodInput = document.getElementById('food-input');
+    const dropdown = document.getElementById('dropdown');
+    const foodResult = document.getElementById('food-result');
+
+    foodInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      dropdown.classList.remove('hidden');
+      
+      if (query.length < 2) {
+        dropdown.innerHTML = '';
+        return;
+      }
+
+      const matches = foodsData.filter(food => food.name.toLowerCase().includes(query));
+      dropdown.innerHTML = matches.map(food => 
+        `<div class="dropdown-item" onclick="selectFood('${food.name}')">
+          <i class="${food.icon}"></i> ${food.name}
+        </div>`
+      ).join('');
+    });
+
+    function selectFood(name) {
+      const food = foodsData.find(f => f.name === name);
+      foodInput.value = name;
+      dropdown.classList.add('hidden');
+      showFoodResult(food);
+    }
+
+    function showFoodResult(food) {
+      foodResult.classList.remove('hidden');
+      foodResult.innerHTML = `
+        <div class="ph-circle ph-${food.property.toLowerCase()}">
+          <i class="fas fa-${food.property === 'Asam' ? 'arrow-down' : food.property === 'Basa' ? 'arrow-up' : 'balance-scale'}"></i>
+          pH ${food.ph}
+        </div>
+        <h3>${food.name}</h3>
+        <p><strong>Sifat:</strong> ${food.property}</p>
+        <p><strong>Hidrolisis:</strong> ${food.hydrolysis}</p>
+        <p><strong>Dampak Tubuh:</strong> ${food.effect}</p>
+      `;
+    }
+
+    // Mixture Simulation
+    function selectMixture(item) {
+      const mixtures = {
+        coffee: { name: 'Kopi ☕', property: 'Asam' },
+        milk: { name: 'Susu 🥛', property: 'Netral' },
+        soda: { name: 'Soda 🥤', property: 'Asam' },
+        baking: { name: 'Baking Soda 🧂', property: 'Basa' }
+      };
+      
+      const index = selectedMixture.findIndex(m => m === item);
+      if (index > -1) selectedMixture.splice(index, 1);
+      else selectedMixture.push(item);
+
+      document.querySelectorAll('.mixture-item').forEach((el, i) => el.classList.toggle('active', selectedMixture.includes(Object.keys(mixtures)[i])));
+      
+      if (selectedMixture.length === 2) {
+        showMixtureResult(selectedMixture.map(s => mixtures[s]));
+      } else {
+        document.getElementById('mixture-result').classList.add('hidden');
+      }
+    }
+
+    function showMixtureResult(items) {
+      const result = document.getElementById('mixture-result');
+      result.classList.remove('hidden');
+      
+      let finalProp = 'Netral';
+      if (items[0].property === items[1].property) finalProp = items[0].property;
+      else if (items.some(i => i.property === 'Basa')) finalProp = 'Cenderung Basa';
+      else finalProp = 'Cenderung Asam';
+
+      result.innerHTML = `
+        <h3>Campuran: ${items.map(i => i.name).join(' + ')}</h3>
+        <div class="ph-circle ph-${finalProp.toLowerCase().replace('cenderung ', '')}">
+          pH Campuran
+        </div>
+        <p><strong>Hasil:</strong> ${finalProp}</p>
+        <p><em>Basa mendominasi asam dalam hidrolisis</em></p>
+      `;
+    }
+
+    // pH Slider
+    const phSlider = document.getElementById('ph-slider');
+    const phDisplay = document.getElementById('ph-display');
+    phSlider.addEventListener('input', (e) => {
+      const value = parseFloat(e.target.value);
+      phDisplay.textContent = value.toFixed(1);
+      phDisplay.className = `ph-circle ph-${value < 7 ? 'acid' : value > 7 ? 'basic' : 'neutral'}`;
+    });
+
+    // Quiz Game
+    const gameQuestions = [
+      { q: 'Kopi pagi itu...', a: ['Asam', 'Basa', 'Netral'], c: 0 },
+      { q: 'Susu malam...', a: ['Asam', 'Basa', 'Netral'], c: 2 },
+      { q: 'Soda siang...', a: ['Asam', 'Basa', 'Netral'], c: 0 },
+      { q: 'Baking soda kue...', a: ['Asam', 'Basa', 'Netral'], c: 1 },
+      { q: 'Hidrolisis NaCl...', a: ['Asam', 'Basa', 'Netral'], c: 2 },
+      { q: 'Yang paling aman gigi...', a: ['Kopi', 'Susu', 'Soda'], c: 1 }
+    ];
+    let gameCurrent = 0, gameScore = 0;
+
+    function startGameQuiz() {
+      gameCurrent = 0; gameScore = 0;
+      document.getElementById('quiz-score').classList.add('hidden');
+      showGameQuestion();
+    }
+
+    function showGameQuestion() {
+      const q = gameQuestions[gameCurrent];
+      document.getElementById('quiz-content').innerHTML = `
+        <div class="question">
+          <div style="font-size: 1.5rem; margin-bottom: 1rem;">Q${gameCurrent + 1}/6</div>
+          <p>${q.q}</p>
+          <div class="options">
+            ${q.a.map((opt, i) => `<button class="option-btn" onclick="checkGameAnswer(${i})">${opt}</button>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function checkGameAnswer(selected) {
+      const q = gameQuestions[gameCurrent];
+      document.querySelectorAll('.option-btn').forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.c) btn.classList.add('correct');
+        if (i === selected && i !== q.c) btn.classList.add('wrong');
+      });
+      
+      if (selected === q.c) gameScore++;
+      
+      setTimeout(() => {
+        gameCurrent++;
+        if (gameCurrent < gameQuestions.length) showGameQuestion();
+        else showGameScore();
+      }, 1200);
+    }
+
+    function showGameScore() {
+      document.getElementById('quiz-content').innerHTML = '<div style="text-align:center"><h2>Quiz Selesai! 🎉</h2></div>';
+      const percent = Math.round(gameScore / gameQuestions.length * 100);
+      let emoji = percent < 50 ? '😢' : percent < 80 ? '😐' : '😎';
+      document.getElementById('emoji-score').textContent = emoji;
+      document.getElementById('final-score').textContent = `Skor: ${gameScore}/6 (${percent}%)`;
+      document.getElementById('quiz-score').classList.remove('hidden');
+    }
+
+    // Habits Tracker
+    let habits = JSON.parse(localStorage.getItem('habits') || '[]');
+    function toggleHabit(el, item) {
+      el.classList.toggle('checked');
+      const index = habits.indexOf(item);
+      if (index > -1) habits.splice(index, 1);
+      else habits.push(item);
+      localStorage.setItem('habits', JSON.stringify(habits));
+      analyzeHabits();
+    }
+
+    function analyzeHabits() {
+      const acidCount = habits.filter(h => ['coffee', 'soda', 'fried'].includes(h)).length;
+      const analysis = document.getElementById('habit-analysis');
+      analysis.classList.remove('hidden');
+      if (acidCount > 1) {
+        analysis.innerHTML = '<h3 style="color: #ff6b6b;">⚠️ Hari ini dominan ASAM!</h3><p>Minum susu atau air putih untuk netralisir.</p>';
+      } else {
+        analysis.innerHTML = '<h3 style="color: #51cf66;">✅ Kebiasaan sehat!</h3><p>Terus jaga keseimbangan pH.</p>';
+      }
+    }
+
+    function resetHabits() {
+      habits = [];
+      localStorage.setItem('habits', '[]');
+      document.querySelectorAll('.habit-item').forEach(el => el.classList.remove('checked'));
+      document.getElementById('habit-analysis').classList.add('hidden');
+    }
+
+    // Dark Mode
+    if (localStorage.getItem('theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
+    function toggleDark() {
+      document.body.toggleAttribute('data-theme');
+      localStorage.setItem('theme', document.body.hasAttribute('data-theme') ? 'dark' : 'light');
+    }
+
+    // Fade-in on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('fade-in');
+      });
+    });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Init
+    analyzeHabits();
+    phSlider.dispatchEvent(new Event('input'));
+  </script>
+</body>
+</html>
