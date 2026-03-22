@@ -1,109 +1,93 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🔍 Cek Sifat Makanan Minuman Anda (Asam/Basa/Netral)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔍 Cek Sifat Makanan</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg,#f7f7f7,#000,#f093fb);
-      min-height: 100vh;
-      color: white;
-    }
+body{
+  font-family:Arial;
+  background:linear-gradient(135deg,#f7f7f7,#000,#f093fb);
+  min-height:100vh;
+  color:white;
+}
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 20px;
-    }
+.container{max-width:1100px;margin:auto;padding:20px}
 
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+header{text-align:center;margin-bottom:20px}
+.identity{
+  margin-top:15px;
+  background:rgba(255,255,255,0.2);
+  padding:10px;
+  border-radius:10px;
+  display:inline-block;
+}
 
-    header h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
+.tabs{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:20px 0;
+}
 
-    .subtitle {
-      opacity: 0.9;
-    }
+.tab-btn{
+  padding:10px 20px;
+  border:none;
+  border-radius:20px;
+  background:rgba(255,255,255,0.2);
+  color:white;
+  cursor:pointer;
+}
+.tab-btn.active{background:rgba(255,255,255,0.4)}
 
-    .identity {
-      margin-top: 15px;
-      background: rgba(255,255,255,0.2);
-      padding: 10px;
-      border-radius: 10px;
-      display: inline-block;
-    }
+section{display:none}
+section.active{display:block}
 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 20px 0;
-    }
+.glass-card{
+  background:white;
+  color:black;
+  padding:20px;
+  border-radius:15px;
+}
 
-    .tab-btn {
-      padding: 10px 20px;
-      border-radius: 20px;
-      border: none;
-      cursor: pointer;
-      background: rgba(255,255,255,0.2);
-      color: white;
-    }
+/* FIX QUIZ */
+.option-btn{
+  padding:12px;
+  margin:5px 0;
+  border:none;
+  border-radius:10px;
+  background:#fff;
+  color:#111; /* FIX */
+  cursor:pointer;
+  width:100%;
+  text-align:left;
+}
+.option-btn:hover{background:#eee}
+.option-btn.correct{background:#4CAF50;color:white}
+.option-btn.wrong{background:#f44336;color:white}
 
-    .tab-btn.active {
-      background: rgba(255,255,255,0.4);
-    }
+/* simple element */
+input{padding:10px;width:100%;margin-top:10px}
 
-    section { display: none; }
-    section.active { display: block; }
+.mixture-item{
+  padding:10px;
+  background:#eee;
+  border-radius:10px;
+  cursor:pointer;
+  margin:5px;
+  display:inline-block;
+}
+.mixture-item.active{background:#ccc}
 
-    .glass-card {
-      background: white;
-      color: black;
-      padding: 20px;
-      border-radius: 15px;
-    }
+.result{margin-top:15px}
 
-    /* QUIZ FIX */
-    .option-btn {
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      background: #fff;
-      color: #111; /* FIX DISINI */
-      cursor: pointer;
-      margin: 5px 0;
-      width: 100%;
-      text-align: left;
-    }
-
-    .option-btn:hover {
-      background: #eee;
-    }
-
-    .option-btn.correct {
-      background: #4CAF50;
-      color: white;
-    }
-
-    .option-btn.wrong {
-      background: #f44336;
-      color: white;
-    }
-
-  </style>
+</style>
 </head>
 
 <body>
@@ -111,79 +95,136 @@
 <div class="container">
 
 <header>
-  <h1>🔍 Cek Sifat Makanan Anda</h1>
-  <p class="subtitle">Asam • Basa • Netral</p>
+<h1>🔍 Cek Sifat Makanan</h1>
+<p>Asam • Basa • Netral</p>
 
-  <div class="identity">
-    <b>Tugas</b><br>
-    Nama: Arif Agung Setiawan<br>
-    Kelas: X1 A<br>
-    Absen: 10
-  </div>
+<div class="identity">
+<b>Tugas</b><br>
+Nama: Arif Agung Setiawan<br>
+Kelas: X1 A<br>
+Absen: 10
+</div>
 </header>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="showTab('quiz')">Quiz</button>
+<button class="tab-btn active" onclick="showTab('cek')">Cek</button>
+<button class="tab-btn" onclick="showTab('mix')">Campur</button>
+<button class="tab-btn" onclick="showTab('quiz')">Quiz</button>
 </div>
 
-<section id="quiz" class="active">
-  <div class="glass-card">
-    <h2>Quiz</h2>
-    <div id="quiz-content"></div>
-    <div id="score"></div>
-  </div>
+<!-- CEK -->
+<section id="cek" class="active">
+<div class="glass-card">
+<h2>Cek Makanan</h2>
+<input id="food" placeholder="ketik kopi / susu / soda">
+<div id="result" class="result"></div>
+</div>
+</section>
+
+<!-- MIX -->
+<section id="mix">
+<div class="glass-card">
+<h2>Simulasi Campur</h2>
+
+<div onclick="selectMix('asam')" class="mixture-item">Kopi (Asam)</div>
+<div onclick="selectMix('netral')" class="mixture-item">Susu (Netral)</div>
+<div onclick="selectMix('basa')" class="mixture-item">Baking Soda (Basa)</div>
+
+<div id="mixResult" class="result"></div>
+</div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+<div class="glass-card">
+<h2>Quiz</h2>
+<div id="quiz-content"></div>
+<div id="score"></div>
+</div>
 </section>
 
 </div>
 
 <script>
 
-const questions = [
-  { q: "Kopi termasuk?", a: ["Asam","Basa","Netral"], c: 0 },
-  { q: "Susu termasuk?", a: ["Asam","Basa","Netral"], c: 2 },
-  { q: "Soda termasuk?", a: ["Asam","Basa","Netral"], c: 0 }
-];
-
-let index = 0;
-let score = 0;
-
+/* TAB */
 function showTab(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
+document.getElementById(id).classList.add("active")
 }
 
-function loadQuestion(){
-  let q = questions[index];
-  document.getElementById("quiz-content").innerHTML = `
-    <p>${q.q}</p>
-    ${q.a.map((opt,i)=>`
-      <button class="option-btn" onclick="answer(${i})">${opt}</button>
-    `).join("")}
-  `;
+/* CEK */
+const data={
+kopi:"Asam",
+susu:"Netral",
+soda:"Asam"
 }
 
-function answer(i){
-  let q = questions[index];
-  document.querySelectorAll(".option-btn").forEach((btn,idx)=>{
-    btn.disabled = true;
-    if(idx === q.c) btn.classList.add("correct");
-    if(idx === i && i !== q.c) btn.classList.add("wrong");
-  });
+document.getElementById("food").addEventListener("input",e=>{
+let val=e.target.value.toLowerCase()
+if(data[val]){
+document.getElementById("result").innerHTML="Sifat: "+data[val]
+}else{
+document.getElementById("result").innerHTML=""
+}
+})
 
-  if(i === q.c) score++;
-
-  setTimeout(()=>{
-    index++;
-    if(index < questions.length){
-      loadQuestion();
-    } else {
-      document.getElementById("quiz-content").innerHTML = "<h3>Quiz Selesai</h3>";
-      document.getElementById("score").innerHTML = "Skor: "+score+"/"+questions.length;
-    }
-  },1000);
+/* MIX */
+let mix=[]
+function selectMix(val){
+if(mix.includes(val)){
+mix=mix.filter(v=>v!==val)
+}else{
+mix.push(val)
 }
 
-loadQuestion();
+if(mix.length==2){
+if(mix.includes("basa")) res="Cenderung Basa"
+else if(mix.includes("asam")) res="Cenderung Asam"
+else res="Netral"
+
+document.getElementById("mixResult").innerHTML="Hasil: "+res
+}
+}
+
+/* QUIZ */
+const q=[
+{q:"Kopi?",a:["Asam","Basa","Netral"],c:0},
+{q:"Susu?",a:["Asam","Basa","Netral"],c:2},
+{q:"Soda?",a:["Asam","Basa","Netral"],c:0}
+]
+
+let i=0,score=0
+
+function loadQ(){
+let d=q[i]
+document.getElementById("quiz-content").innerHTML=`
+<p>${d.q}</p>
+${d.a.map((o,idx)=>`<button class="option-btn" onclick="ans(${idx})">${o}</button>`).join("")}
+`
+}
+
+function ans(x){
+let d=q[i]
+document.querySelectorAll(".option-btn").forEach((b,idx)=>{
+b.disabled=true
+if(idx==d.c)b.classList.add("correct")
+if(idx==x && x!=d.c)b.classList.add("wrong")
+})
+
+if(x==d.c)score++
+
+setTimeout(()=>{
+i++
+if(i<q.length)loadQ()
+else{
+document.getElementById("quiz-content").innerHTML="<h3>Selesai</h3>"
+document.getElementById("score").innerHTML="Skor: "+score+"/"+q.length
+}
+},1000)
+}
+
+loadQ()
 
 </script>
 
