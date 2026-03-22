@@ -4,169 +4,287 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🔍 Cek Sifat Makanan Minuman Anda (Asam/Basa/Netral)</title>
-
+  <meta name="description" content="App interaktif cek pH makanan minuman, simulasi campur, quiz, analisis kebiasaan harian.">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
   <style>
+    /* Modern App-like Glassmorphism Design */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    :root {
+      --bg-gradient: linear-gradient(135deg, #f7f7f7 0%, #000000 50%, #f093fb 100%);
+      --glass-bg: rgba(255,255,255,0.1);
+      --glass-blur: blur(20px);
+      --shadow-soft: 0 8px 32px rgba(31,38,135,0.37);
+      --accent-blue: #4facfe;
+      --accent-purple: #a55eea;
+      --accent-pink: #f093fb;
+    }
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #f7f7f7 0%, #000000 50%, #f093fb 100%);
+      background: var(--bg-gradient);
       min-height: 100vh;
+      overflow-x: hidden;
     }
-
-    .container { max-width: 1200px; margin: auto; padding: 1.5rem; }
-
-    header {
-      text-align: center;
-      color: white;
-      padding: 2rem 0;
+    
+    /* TUGAS INFO - Fixed Position */
+    .tugas-info {
+      position: fixed; top: 20px; left: 20px; 
+      background: rgba(255,255,255,0.95); 
+      backdrop-filter: blur(10px);
+      padding: 1rem; border-radius: 12px; 
+      border: 1px solid rgba(0,0,0,0.1);
+      font-size: 0.9rem; color: #333;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      z-index: 1000; max-width: 250px;
+      font-weight: 500;
     }
-
-    h1 {
-      font-size: 3rem;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 2rem 0;
-    }
-
-    .tab-btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.2);
-      color: white;
-      cursor: pointer;
-    }
-
-    .tab-btn.active { background: rgba(255,255,255,0.4); }
-
-    section { display: none; }
-    section.active { display: block; }
-
+    
     .glass-card {
-      background: white;
-      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: var(--glass-blur);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: var(--shadow-soft);
       padding: 2rem;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      color: #333;
     }
-
-    /* QUIZ FIX */
+    .glass-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(31,38,135,0.4);
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+    header {
+      text-align: center; padding: 3rem 1rem; color: white;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 700; margin-bottom: 1rem;
+      background: linear-gradient(45deg, #fff, #f0f0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .subtitle { font-size: 1.3rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+    
+    /* Navigation Tabs */
+    .tabs { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
+    .tab-btn {
+      padding: 1rem 2rem; background: rgba(255,255,255,0.1); color: white; border: none;
+      border-radius: 50px; font-weight: 500; cursor: pointer; transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: rgba(255,255,255,0.25); transform: translateY(-2px);
+    }
+    
+    /* Sections */
+    section { display: none; animation: slideIn 0.6s ease; }
+    section.active { display: block; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    
+    /* Food Checker */
+    .food-search { max-width: 500px; margin: 2rem auto; position: relative; }
+    #food-input { 
+      width: 100%; padding: 1.2rem 1.5rem; border: none; border-radius: 16px; font-size: 1.1rem;
+      background: rgba(255,255,255,0.9); color: #333; backdrop-filter: blur(10px);
+    }
+    .dropdown {
+      position: absolute; top: 100%; left: 0; right: 0; background: rgba(255,255,255,0.95);
+      border-radius: 0 0 16px 16px; max-height: 200px; overflow-y: auto; z-index: 10;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .dropdown-item { 
+      padding: 1rem; cursor: pointer; border-bottom: 1px solid rgba(0,0,0,0.1); 
+      display: flex; align-items: center; gap: 1rem; color: #333;
+      transition: background 0.2s;
+    }
+    .dropdown-item:hover { background: rgba(102,126,234,0.1); }
+    
+    .result-card {
+      margin-top: 2rem; text-align: center; padding: 2.5rem; color: #333;
+    }
+    .ph-circle {
+      width: 120px; height: 120px; border-radius: 50%; margin: 1rem auto; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 700; border: 4px solid rgba(255,255,255,0.3);
+    }
+    .ph-acid { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); color: white; }
+    .ph-neutral { background: linear-gradient(135deg, #51cf66, #74c69d); color: white; }
+    .ph-basic { background: linear-gradient(135deg, #4facfe, #74c0fc); color: white; }
+    
+    /* Mixture Simulation */
+    .mixture-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .mixture-item { 
+      text-align: center; cursor: pointer; padding: 1.5rem; border-radius: 16px; transition: all 0.3s; 
+      background: rgba(255,255,255,0.7); color: #333;
+    }
+    .mixture-item.active { background: rgba(255,255,255,0.95); transform: scale(1.05); }
+    .mixture-item i { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+    
+    /* pH Slider */
+    .slider-container { text-align: center; margin: 2rem 0; }
+    #ph-slider { width: 80%; margin: 1rem auto; height: 8px; border-radius: 10px; }
+    .ph-examples {
+      display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;
+    }
+    .ph-range {
+      background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 12px; min-width: 120px;
+      backdrop-filter: blur(10px); color: #333; text-align: center;
+    }
+    
+    /* QUIZ - TEXT HITAM YANG SUDAH FIXED */
+    .quiz-container { max-width: 600px; margin: 2rem auto; }
+    .question { margin-bottom: 1.5rem; font-size: 1.2rem; font-weight: 500; color: #333; }
+    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
     .option-btn {
-      padding: 1rem;
-      border-radius: 10px;
-      border: none;
-      background: rgba(255,255,255,0.9);
-      color: #222; /* FIX */
-      cursor: pointer;
-      transition: 0.3s;
-      width: 100%;
-      text-align: left;
+      padding: 1.2rem 1.5rem; border: none; border-radius: 16px; 
+      background: rgba(255,255,255,0.9) !important;
+      color: #333 !important; 
+      cursor: pointer; transition: all 0.3s; font-size: 1rem; text-align: left;
+      border: 2px solid rgba(0,0,0,0.1); font-weight: 500; position: relative; overflow: hidden;
     }
-
-    .option-btn:hover {
-      background: #fff;
+    .option-btn::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; 
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s;
     }
-
-    .option-btn.correct {
-      background: green;
-      color: white;
+    .option-btn:hover::before { left: 100%; }
+    .option-btn:hover { 
+      background: rgba(255,255,255,1) !important; 
+      transform: translateY(-3px); 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      color: #333 !important; border-color: var(--accent-blue);
     }
-
-    .option-btn.wrong {
-      background: red;
-      color: white;
+    .option-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+    .option-btn.correct { 
+      background: linear-gradient(135deg, #51cf66, #74c69d) !important; 
+      color: white !important; 
+      border-color: #51cf66; animation: pulse 0.6s;
     }
-
-    .options { display: grid; gap: 10px; }
-
+    .option-btn.wrong { 
+      background: linear-gradient(135deg, #ff6b6b, #ff8e8e) !important; 
+      color: white !important; border-color: #ff6b6b;
+    }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    
+    /* Habits */
+    .habits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+    .habit-item {
+      display: flex; align-items: center; gap: 1rem; padding: 1.2rem; background: rgba(255,255,255,0.85);
+      border-radius: 16px; cursor: pointer; transition: all 0.3s; color: #333; border: 2px solid transparent;
+    }
+    .habit-item:hover { border-color: var(--accent-blue); }
+    .habit-item.checked { background: rgba(81,207,102,0.3); border-color: #51cf66; }
+    .habit-item i { font-size: 1.5rem; }
+    
+    /* Daily Tips */
+    .tips-list { display: grid; gap: 1rem; }
+    .tip { padding: 1.5rem; background: rgba(255,255,255,0.85); border-radius: 16px; backdrop-filter: blur(10px); color: #333; }
+    
+    /* Dark Mode */
+    [data-theme="dark"] { 
+      --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    [data-theme="dark"] .glass-card { 
+      background: rgba(20,20,40,0.9); color: #e0e0e0; 
+      border-color: rgba(255,255,255,0.1);
+    }
+    [data-theme="dark"] .option-btn { 
+      background: rgba(40,40,60,0.9) !important; 
+      color: #e0e0e0 !important; border-color: rgba(255,255,255,0.2);
+    }
+    [data-theme="dark"] .option-btn:hover { 
+      background: rgba(60,60,80,0.9) !important; 
+      color: #fff !important; border-color: var(--accent-blue);
+    }
+    [data-theme="dark"] .tugas-info,
+    [data-theme="dark"] #food-input,
+    [data-theme="dark"] .mixture-item,
+    [data-theme="dark"] .habit-item,
+    [data-theme="dark"] .ph-range,
+    [data-theme="dark"] .tip,
+    [data-theme="dark"] .dropdown {
+      background: rgba(40,40,60,0.9); color: #e0e0e0;
+    }
+    .dark-toggle { 
+      position: fixed; top: 2rem; right: 2rem; 
+      background: rgba(255,255,255,0.2); border: none; border-radius: 50%; 
+      width: 50px; height: 50px; cursor: pointer; z-index: 1000; 
+      transition: all 0.3s;
+    }
+    .dark-toggle:hover { background: rgba(255,255,255,0.3); transform: rotate(15deg); }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .tabs { flex-direction: column; align-items: center; }
+      .options { grid-template-columns: 1fr; }
+      .mixture-grid { grid-template-columns: repeat(2, 1fr); }
+      .tugas-info { 
+        position: relative; left: auto; right: auto; top: auto; 
+        margin: 1rem auto 2rem; max-width: none; text-align: center; 
+      }
+      .dark-toggle { top: 1rem; right: 1rem; }
+    }
+    .fade-in { animation: fadeInUp 0.6s ease forwards; opacity: 0; transform: translateY(20px); }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    .hidden { display: none !important; }
   </style>
 </head>
-
 <body>
-
-<div class="container">
-
-  <header>
-    <h1>🔍 Cek Sifat Makanan</h1>
-    <p>Tugas: Nama : Arif Agung Setiawan | Kelas: X1 A | Absen: 10</p>
-  </header>
-
-  <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('quiz')">Quiz</button>
+  <!-- TUGAS INFO -->
+  <div class="tugas-info fade-in">
+    <strong>📚 Tugas Kimia</strong><br>
+    <strong>Nama:</strong> Arif Agung Setiawan<br>
+    <strong>Kelas:</strong> X1 A | <strong>Absen:</strong> 10
   </div>
 
-  <!-- QUIZ -->
-  <section id="quiz" class="active">
-    <div class="glass-card">
-      <h2>Quiz</h2>
-      <div id="quiz-content"></div>
+  <!-- Dark Mode Toggle -->
+  <button class="dark-toggle" onclick="toggleDark()" title="Toggle Dark Mode">
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <div class="container">
+    <!-- Hero -->
+    <header>
+      <h1>🔍 Cek Sifat Makanan Anda</h1>
+      <p class="subtitle">Asam • Basa • Netral | Dampak Hidrolisis Garam pada Tubuh | Gunakan Setiap Hari!</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('checker')">🍎 Cek Makanan</button>
+      <button class="tab-btn" onclick="showTab('simulation')">🧪 Campur Simulasi</button>
+      <button class="tab-btn" onclick="showTab('ph-visual')">📊 Visual pH</button>
+      <button class="tab-btn" onclick="showTab('quiz')">🎮 Quiz</button>
+      <button class="tab-btn" onclick="showTab('habits')">📈 Kebiasaan</button>
+      <button class="tab-btn" onclick="showTab('tips')">💡 Tips Harian</button>
     </div>
-  </section>
 
-</div>
+    <!-- Food Checker -->
+    <section id="checker" class="active">
+      <div class="glass-card">
+        <h2><i class="fas fa-search"></i> Cek Makanan Minuman</h2>
+        <div class="food-search">
+          <input type="text" id="food-input" placeholder="Ketik nama makanan (kopi, susu, soda...)" autocomplete="off">
+          <div id="dropdown" class="dropdown hidden"></div>
+        </div>
+        <div id="food-result" class="result-card hidden"></div>
+      </div>
+    </section>
 
-<script>
-const questions = [
-  {q:"Kopi itu?", a:["Asam","Basa","Netral"], c:0},
-  {q:"Susu itu?", a:["Asam","Basa","Netral"], c:2}
-];
-
-let current = 0;
-let score = 0;
-
-function showTab(tab){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(tab).classList.add("active");
-}
-
-function startQuiz(){
-  current=0; score=0;
-  showQuestion();
-}
-
-function showQuestion(){
-  let q=questions[current];
-  document.getElementById("quiz-content").innerHTML = `
-    <p>${q.q}</p>
-    <div class="options">
-      ${q.a.map((opt,i)=>`<button class="option-btn" onclick="check(${i})">${opt}</button>`).join("")}
-    </div>
-  `;
-}
-
-function check(i){
-  let q=questions[current];
-  document.querySelectorAll(".option-btn").forEach((btn,index)=>{
-    btn.disabled=true;
-    if(index==q.c) btn.classList.add("correct");
-    if(index==i && i!=q.c) btn.classList.add("wrong");
-  });
-
-  if(i==q.c) score++;
-
-  setTimeout(()=>{
-    current++;
-    if(current<questions.length) showQuestion();
-    else finish();
-  },1000);
-}
-
-function finish(){
-  document.getElementById("quiz-content").innerHTML = `
-    <h3>Skor: ${score}/${questions.length}</h3>
-    <button onclick="startQuiz()">Ulang</button>
-  `;
-}
-
-startQuiz();
-</script>
-
-</body>
-</html>
+    <!-- Mixture Simulation -->
+    <section id="simulation">
+      <div class="glass-card">
+        <h2><i class="fas fa-flask"></i> Simulasi Campuran</h2>
+        <div class="mixture-grid">
+          <div class="mixture-item" onclick="selectMixture('coffee')">
+            <i class="fas fa-mug-hot"></i>
+            <span>Kopi ☕<br><small>(Asam pH 5.0)</small></span>
+          </div>
+          <div class="mixture-item" onclick="selectMixture('milk')">
+            <i class="fas fa-glass-water"></i>
+            <span>🥛 Susu<br><small>(Netral pH 6.5)</small></span>
+          </div>
+          <div class="mixture-item" onclick="selectMixture('soda')">
+            <i class="fas fa-wine-glass-alt"></i>
+            <span>Soda 🥤<br><small>(Asam pH 2.5)</small></span>
+          </div>
+          <div class="mixture-item" onclick="selectMixture('baking')">
+            <i class="fas fa-prescription-bottle"></i>
+            <span>Baking Soda 🧂<br><small
