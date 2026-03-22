@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Cola",
+    "ph": 2.5,
+    "type": "Sangat Asam",
+    "color": "Merah",
+    "effect": "Erosi gigi cepat - minum sedotan!",
+    "image": "https://cdn-icons-png.flaticon.com/512/2877/2877624.png",
+    "tips": "Pilih air lemon jika haus karbonasi",
+    "daily": "Hindari minum langsung, pakai sedotan"
+  },
+  {
+    "name": "Jeruk Nipis",
+    "ph": 2.2,
+    "type": "Sangat Asam",
+    "color": "Merah",
+    "effect": "Cegah sariawan - bilas mulut setelahnya",
+    "image": "https://cdn-icons-png.flaticon.com/512/415/415733.png",
+    "tips": "Tambah madu jadi minuman sehat",
+    "daily": "Cuci gigi 30 menit setelah minum"
+  },
+  {
+    "name": "Kopi Hitam",
+    "ph": 5.0,
+    "type": "Asam Sedang",
+    "color": "Kuning",
+    "effect": "Noda gigi - brush 2x sehari",
+    "image": "https://cdn-icons-png.flaticon.com/512/2437/2437221.png",
+    "tips": "Tambah susu kurangi keasaman",
+    "daily": "Minum lewat sedotan kurangi noda"
+  },
+  {
+    "name": "Susu Sapi",
+    "ph": 6.5,
+    "type": "Hampir Netral",
+    "color": "Hijau Muda",
+    "effect": "Pelindung gigi alami",
+    "image": "https://cdn-icons-png.flaticon.com/512/869/869869.png",
+    "tips": "Pilih susu rendah gula",
+    "daily": "Minum setelah kopi netralkan asam"
+  },
+  {
+    "name": "Air Minum",
+    "ph": 7.0,
+    "type": "Netral Sempurna",
+    "color": "Hijau",
+    "effect": "Pembersih mulut terbaik",
+    "image": "https://cdn-icons-png.flaticon.com/512/728/728093.png",
+    "tips": "Target 2L/hari",
+    "daily": "Bilas mulut setiap setelah makan"
+  },
+  {
+    "name": "Air Kelapa",
+    "ph": 5.2,
+    "type": "Asam Ringan",
+    "color": "Kuning",
+    "effect": "Hidrasi + elektrolit",
+    "image": "https://cdn-icons-png.flaticon.com/512/599/599466.png",
+    "tips": "Alami lebih baik dari soda",
+    "daily": "Ganti minuman manis"
+  },
+  {
+    "name": "Yogurt Plain",
+    "ph": 4.5,
+    "type": "Asam",
+    "color": "Orange",
+    "effect": "Probiotik baik gigi",
+    "image": "https://cdn-icons-png.flaticon.com/512/1042/1042122.png",
+    "tips": "Pilih tanpa gula tambahan",
+    "daily": "Makan sarapan pelindung enamel"
+  },
+  {
+    "name": "Keju",
+    "ph": 5.5,
+    "type": "Asam Ringan",
+    "color": "Kuning",
+    "effect": "Kalsium lindungi gigi",
+    "image": "https://cdn-icons-png.flaticon.com/512/2046/2046832.png",
+    "tips": "Makan setelah makanan asam",
+    "daily": "Cemilan sehat netralkan pH mulut"
+  },
+  {
+    "name": "Permen Karet",
+    "ph": 7.5,
+    "type": "Basa Ringan",
+    "color": "Biru Muda",
+    "effect": "Tingkatkan air liur bersihkan mulut",
+    "image": "https://cdn-icons-png.flaticon.com/512/3349/3349872.png",
+    "tips": "Tanpa gula lebih baik",
+    "daily": "Kunyah 20 menit setelah makan"
+  },
+  {
+    "name": "Pasta Gigi",
+    "ph": 8.0,
+    "type": "Basa",
+    "color": "Biru",
+    "effect": "Netralkan asam + fluoride",
+    "image": "https://cdn-icons-png.flaticon.com/512/128/128347.png",
+    "tips": "Fluoride kuat cegah karies",
+    "daily": "Brush 2 menit 2x sehari"
+  },
+  {
+    "name": "Soda Kue",
+    "ph": 9.0,
+    "type": "Basa",
+    "color": "Biru",
+    "effect": "Obat sakit gigi alami darurat",
+    "image": "https://cdn-icons-png.flaticon.com/512/3079/3079325.png",
+    "tips": "Larut air kumur 30 detik",
+    "daily": "Jangan sering - abrasif"
+  },
+  {
+    "name": "Mouthwash",
+    "ph": 4.0,
+    "type": "Asam (fluoride)",
+    "color": "Orange",
+    "effect": "Bakteri killer + enamel kuat",
+    "image": "https://cdn-icons-png.flaticon.com/512/214/214332.png",
+    "tips": "Jangan langsung setelah brush",
+    "daily": "Malam hari sebelum tidur"
+  },
+  {
+    "name": "Sayur Hijau",
+    "ph": 6.8,
+    "type": "Netral",
+    "color": "Hijau",
+    "effect": "Kalsium alami bersihkan gigi",
+    "image": "https://cdn-icons-png.flaticon.com/512/3317/3317902.png",
+    "tips": "Bayam/kangkung gigit langsung",
+    "daily": "Akhiri makan dengan sayur"
+  },
+  {
+    "name": "Teh Hijau",
+    "ph": 7.5,
+    "type": "Basa Ringan",
+    "color": "Hijau Muda",
+    "effect": "Antioksidan kurangi plak",
+    "image": "https://cdn-icons-png.flaticon.com/512/1645/1645854.png",
+    "tips": "Tanpa gula setelah makan",
+    "daily": "Ganti kopi sore hari"
+  }
+]

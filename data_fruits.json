@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Jeruk",
+    "ph": 3.0,
+    "type": "Sangat Asam",
+    "color": "Merah Terang",
+    "effect": "Erosi enamel - bilas mulut!",
+    "image": "https://cdn-icons-png.flaticon.com/512/415/415733.png",
+    "tips": "Potong tipis + madu jadi snack aman",
+    "daily": "Sedot pakai sedotan, jangan langsung"
+  },
+  {
+    "name": "Lemon",
+    "ph": 2.2,
+    "type": "Sangat Asam",
+    "color": "Kuning Cerah",
+    "effect": "Sariawan trigger",
+    "image": "https://cdn-icons-png.flaticon.com/512/3345/3345023.png",
+    "tips": "Air lemon pagi + baking soda netral",
+    "daily": "Bilas air 30 menit setelahnya"
+  },
+  {
+    "name": "Apel",
+    "ph": 3.5,
+    "type": "Asam",
+    "color": "Orange",
+    "effect": "Noda ringan gigi",
+    "image": "https://cdn-icons-png.flaticon.com/512/2076/2076023.png",
+    "tips": "Kupas kulit kurangi asam",
+    "daily": "Gigit apel setelah keju aman"
+  },
+  {
+    "name": "Pisang",
+    "ph": 4.5,
+    "type": "Asam Ringan",
+    "color": "Kuning",
+    "effect": "Kalium baik gusi",
+    "image": "https://cdn-icons-png.flaticon.com/512/3836/3836498.png",
+    "tips": "Matang sempurna pH lebih tinggi",
+    "daily": "Cemilan aman kapan saja"
+  },
+  {
+    "name": "Anggur",
+    "ph": 3.8,
+    "type": "Asam",
+    "color": "Ungu Muda",
+    "effect": "Stain ungu gigi",
+    "image": "https://cdn-icons-png.flaticon.com/512/3015/3015744.png",
+    "tips": "Kunyah permen karet setelahnya",
+    "daily": "Pilih anggur putih kurang noda"
+  },
+  {
+    "name": "Strawberry",
+    "ph": 3.3,
+    "type": "Asam",
+    "color": "Merah Muda",
+    "effect": "Pemutih alami + asam",
+    "image": "https://cdn-icons-png.flaticon.com/512/2058/2058814.png",
+    "tips": "Gosok gigi dengan buahnya (gentle)",
+    "daily": "Bilas segera hindari noda"
+  },
+  {
+    "name": "Nanas",
+    "ph": 3.2,
+    "type": "Sangat Asam",
+    "color": "Kuning Emas",
+    "effect": "Enzim + asam kuat",
+    "image": "https://cdn-icons-png.flaticon.com/512/676/676236.png",
+    "tips": "Potong kecil + yogurt campur",
+    "daily": "Hindari kosong perut"
+  },
+  {
+    "name": "Pepaya",
+    "ph": 5.9,
+    "type": "Hampir Netral",
+    "color": "Hijau Muda",
+    "effect": "Enzim proteolitik aman",
+    "image": "https://cdn-icons-png.flaticon.com/512/405/405085.png",
+    "tips": "Makan matang pH stabil",
+    "daily": "Buah aman untuk gigi"
+  },
+  {
+    "name": "Semangka",
+    "ph": 5.2,
+    "type": "Asam Ringan",
+    "color": "Merah Muda",
+    "effect": "Hidrasi tinggi",
+    "image": "https://cdn-icons-png.flaticon.com/512/3235/3235594.png",
+    "tips": "Makan dingin segar mulut",
+    "daily": "Pilih potong besar gigit minim"
+  },
+  {
+    "name": "Melon",
+    "ph": 6.2,
+    "type": "Netral",
+    "color": "Hijau",
+    "effect": "Air 90% aman gigi",
+    "image": "https://cdn-icons-png.flaticon.com/512/1070/1070693.png",
+    "tips": "Hidrasi + vitamin C",
+    "daily": "Buah terbaik untuk gigi"
+  },
+  {
+    "name": "Pir",
+    "ph": 3.6,
+    "type": "Asam",
+    "color": "Kuning",
+    "effect": "Fibers bersihkan gigi",
+    "image": "https://cdn-icons-png.flaticon.com/512/162/1628142.png",
+    "tips": "Kulitnya sikat gigi alami",
+    "daily": "Gigit langsung bersih plak"
+  }
+]

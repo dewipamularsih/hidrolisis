@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Food pH Checker</title>
+  <meta name="description" content="Cek sifat asam/basa/netral makanan minuman interaktif - daily health app">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Premium Glassmorphism + Modern Gradient */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    
+    :root {
+      --neon-blue: #4facfe;
+      --purple: #6a11cb;
+      --cyan: #00f2fe;
+      --glass: rgba(255, 255, 255, 0.1);
+      --glass-dark: rgba(255, 255, 255, 0.05);
+      --shadow-neumorph: 12px 12px 24px rgba(0,0,0,0.1), -12px -12px 24px rgba(255,255,255,0.3);
+      --shadow-glow: 0 0 30px rgba(79, 172, 254, 0.4);
+    }
+
+    [data-theme="dark"] {
+      --glass: rgba(0, 0, 0, 0.3);
+      --glass-dark: rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(ellipse at top, var(--neon-blue), var(--purple)), 
+                  radial-gradient(ellipse at bottom, var(--cyan), var(--purple));
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* App Container */
+    .app-container {
+      max-width: 450px;
+      margin: 0 auto;
+      padding: 1rem;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Floating Glass Navbar */
+    .navbar {
+      position: sticky;
+      top: 1rem;
+      z-index: 100;
+      display: flex;
+      gap: 0.5rem;
+      backdrop-filter: blur(20px);
+      background: var(--glass);
+      border-radius: 24px;
+      padding: 0.5rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .nav-item {
+      flex: 1;
+      padding: 1rem 0.5rem;
+      text-align: center;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1);
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+
+    .nav-item.active {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+    }
+
+    .hero-title {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-weight: 800;
+      background: linear-gradient(45deg, #fff, var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 10px rgba(0,242,254,0.5)); }
+      to { filter: drop-shadow(0 0 20px rgba(0,242,254,0.8)); }
+    }
+
+    /* Glass Cards */
+    .glass-card {
+      background: var(--glass);
+      backdrop-filter: blur(25px);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-neumorph), var(--shadow-glow);
+      transition: all 0.4s ease-out;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2), var(--shadow-glow);
+    }
+
+    /* Food Checker */
+    .search-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.5rem 1rem 3rem;
+      border: none;
+      border-radius: 20px;
+      background: var(--glass-dark);
+      color: white;
+      font-size: 1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .search-input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.7);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--glass);
+      border-radius: 0 0 20px 20px;
+      max-height: 240px;
+      overflow-y: auto;
+      z-index: 20;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .dropdown-item {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.2s;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Result Display */
+    .ph-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .ph-acid { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+    .ph-neutral { background: rgba(81, 207, 102, 0.2); color: #51cf66; }
+    .ph-basic { background: rgba(79, 172, 254, 0.2); color: var(--neon-blue); }
+
+    .ph-impact {
+      background: var(--glass-dark);
+      padding: 1.5rem;
+      border-radius: 16px;
+      margin-top: 1rem;
+    }
+
+    /* Mixture Selector */
+    .mixture-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .mixture-card {
+      aspect-ratio: 1;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .mixture-card:hover {
+      transform: scale(1.05);
+      border-color: var(--neon-blue);
+    }
+
+    .mixture-card.active {
+      background: rgba(79, 172, 254, 0.2);
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 20px rgba(79, 172, 254, 0.4);
+    }
+
+    .mixture-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* pH Slider */
+    .ph-visual {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .ph-slider-container {
+      position: relative;
+      margin: 2rem 0;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.2);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--neon-blue);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(79,172,254,0.5);
+    }
+
+    .ph-display {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      margin: 1.5rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 800;
+      border: 4px solid rgba(255,255,255,0.3);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1);
+      backdrop-filter: blur(10px);
+    }
+
+    .ph-display.acid { background: rgba(255,107,107,0.3); border-color: rgba(255,107,107,0.6); }
+    .ph-display.neutral { background: rgba(81,207,102,0.3); border-color: rgba(81,207,102,0.6); }
+    .ph-display.basic { background: rgba(79,172,254,0.3); border-color: rgba(79,172,254,0.6); }
+
+    /* Quiz */
+    .quiz-question {
+      background: var(--glass-dark);
+      padding: 1.5rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .quiz-option {
+      padding: 1.2rem 1.5rem;
+      background: var(--glass-dark);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: left;
+      border: 1px solid transparent;
+    }
+
+    .quiz-option:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateY(-2px);
+    }
+
+    .quiz-option.correct {
+      background: rgba(81,207,102,0.3);
+      border-color: #51cf66;
+      animation: pulse 0.6s;
+    }
+
+    .quiz-option.wrong {
+      background: rgba(255,107,107,0.3);
+      border-color: #ff6b6b;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Habits */
+    .habits-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .habit-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.2rem;
+      background: var(--glass-dark);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-left: 4px solid transparent;
+    }
+
+    .habit-item:hover {
+      transform: translateX(4px);
+    }
+
+    .habit-item.checked {
+      border-left-color: var(--neon-blue);
+      background: rgba(79,172,254,0.1);
+    }
+
+    .habit-icon {
+      font-size: 1.4rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Analysis */
+    .analysis-card {
+      margin-top: 2rem;
+      padding: 2rem;
+      text-align: center;
+      border-radius: 20px;
+    }
+
+    .analysis-emoji {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .analysis-warning { border: 2px solid #ff6b6b; background: rgba(255,107,107,0.1); }
+    .analysis-good { border: 2px solid #51cf66; background: rgba(81,207,102,0.1); }
+
+    /* Daily Tips */
+    .tips-grid {
+      display: grid;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .tip-card {
+      background: var(--glass-dark);
+      padding: 1.5rem;
+      border-radius: 20px;
+      border-left: 5px solid var(--neon-blue);
+      transition: transform 0.3s;
+    }
+
+    .tip-card:hover {
+      transform: translateX(8px);
+    }
+
+    .tip-icon {
+      font-size: 1.5rem;
+      color: var(--neon-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Dark Toggle */
+    .dark-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      background: var(--glass);
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-neumorph);
+      z-index: 1000;
+      transition: all 0.3s;
+    }
+
+    .dark-toggle:hover {
+      transform: scale(1.1) rotate(180deg);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .app-container { padding: 0.5rem; }
+      .glass-card { padding: 1.5rem; }
+      h1 { font-size: 2rem; }
+    }
+
+    /* Scroll Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Dark Mode Toggle -->
+  <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <div class="app-container">
+    <!-- Hero -->
+    <header class="fade-in">
+      <h1>🔍 Smart Food pH Checker</h1>
+      <p>Cek sifat makanan minuman - pahami hidrolisis garam secara intuitif</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="navbar fade-in">
+      <div class="nav-item active" onclick="showSection('food-checker')">
+        <i class="fas fa-search"></i>
+        <div>Cek Makanan</div>
+      </div>
+      <div class="nav-item" onclick="showSection('mix-simulator')">
+        <i class="fas fa-flask"></i>
+        <div>Campur Simulasi</div>
+      </div>
+      <div class="nav-item" onclick="showSection('ph-visual')">
+        <i class="fas fa-sliders-h"></i>
+        <div>pH Visual</div>
+      </div>
+      <div class="nav-item" onclick="showSection('quiz')">
+        <i class="fas fa-gamepad"></i>
+        <div>Quiz</div>
+      </div>
+      <div class="nav-item" onclick="showSection('habits')">
+        <i class="fas fa-chart-line"></i>
+        <div>Kebiasaan</div>
+      </div>
+    </div>
+
+    <!-- Food Checker -->
+    <section id="food-checker" class="active fade-in">
+      <div class="glass-card">
+        <h2><i class="fas fa-search"></i> Cek Makanan Minuman</h2>
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" id="food-search" placeholder="Cari makanan... (kopi, susu, soda)" autocomplete="off">
+          <div id="search-dropdown" class="dropdown"></div>
+        </div>
+        <div id="food-result" class="hidden"></div>
+      </div>
+    </section>
+
+    <!-- Mix Simulator -->
+    <section id="mix-simulator" class="fade-in">
+      <div class="glass-card">
+        <h2><i class="fas fa-flask"></i> Smart Mix Simulator</h2>
+        <div class="mixture-selector">
+          <div class="mixture-card" onclick="toggleMix('coffee')">
+            <div class="mixture-icon">☕</div>
+            <div>Kopi</div>
+            <small>Asam</small>
+          </div>
+          <div class="mixture-card" onclick="toggleMix('milk')">
+            <div class="mixture-icon">🥛</div>
+            <div>Susu</div>
+            <small>Netral</small>
+          </div>
+          <div class="mixture-card" onclick="toggleMix('soda')">
+            <div class="mixture-icon">🥤</div>
+            <div>Soda</div>
+            <small>Asam</small>
+          </div>
+          <div class="mixture-card" onclick="toggleMix('baking')">
+            <div class="mixture-icon">🧂</div>
+            <div>Baking Soda</div>
+            <small>Basa</small>
+          </div>
+        </div>
+        <div id="mix-result" class="ph-impact hidden">
+          Pilih 2 bahan untuk melihat hasil campuran...
+        </div>
+      </div>
+    </section>
+
+    <!-- pH Visual -->
+    <section id="ph-visual" class="fade-in">
+      <div class="glass-card ph-visual">
+        <h2><i class="fas fa-sliders-h"></i> Interactive pH Scale</h2>
+        <div class="ph-slider-container">
+          <input type="range" id="ph-range" min="0" max="14" value="7" class="slider">
+          <div id="ph-value" class="ph-display neutral">7.0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" class="fade-in">
+      <div class="glass-card">
+        <h2><i class="fas fa-gamepad"></i> Gamified Quiz</h2>
+        <div id="quiz-container">
+          <button onclick="startQuiz()" class="tab-btn" style="width: 100%; margin-bottom: 1rem;">
+            🎮 Mulai Quiz Harian
+          </button>
+        </div>
+        <div id="quiz-score" class="hidden"></div>
+      </div>
+    </section>
+
+    <!-- Habits -->
+    <section id="habits" class="fade-in">
+      <div class="glass-card">
+        <h2><i class="fas fa-clipboard-list"></i> Daily Food Tracker</h2>
+        <div class="habits-list">
+          <div class="habit-item" onclick="toggleHabit('coffee')">
+            <div class="habit-icon"><i class="fas fa-coffee"></i></div>
+            Kopi Pagi
+          </div>
+          <div class="habit-item" onclick="toggleHabit('fried')">
+            <div class="habit-icon"><i class="fas fa-drumstick-bite"></i></div>
+            Gorengan
+          </div>
+          <div class="habit-item" onclick="toggleHabit('soda')">
+            <div class="habit-icon"><i class="fas fa-wine-glass-alt"></i></div>
+            Soda
+          </div>
+          <div class="habit-item" onclick="toggleHabit('milk')">
+            <div class="habit-icon"><i class="fas fa-glass-whiskey"></i></div>
+            Susu
+          </div>
+        </div>
+        <div id="habits-analysis" class="analysis-card hidden"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Food Data with Hydrolysis Insights
+    const foodDatabase = [
+      {
+        name: 'Kopi ☕',
+        property: 'Asam',
+        ph: 5.0,
+        hydrolysis: 'Kafein + garam fosfat hidrolisis',
+        impact: 'Noda gigi, iritasi lambung lambat',
+        color: '#ff6b6b'
+      },
+      {
+        name: 'Susu 🥛',
+        property: 'Netral',
+        ph: 6.5,
+        hydrolysis: 'Garam kalsium laktat (netral)',
+        impact: 'Pelindung enamel gigi, kalsium tinggi',
+        color: '#51cf66'
+      },
+      {
+        name: 'Soda 🥤',
+        property: 'Asam Kuat',
+        ph: 2.5,
+        hydrolysis: 'Fosfat + karbonat asam',
+        impact: 'Erosi gigi cepat, lapar asam',
+        color: '#ff4757'
+      },
+      {
+        name: 'Mie Instan 🍜',
+        property: 'Asam',
+        ph: 4.8,
+        hydrolysis: 'MSG + pengawet asam',
+        impact: 'Pencernaan lambat',
+        color: '#ff6b6b'
+      },
+      {
+        name: 'Baking Soda 🧂',
+        property: 'Basa',
+        ph: 9.0,
+        hydrolysis: 'HCO₃⁻ + H₂O → OH⁻',
+        impact: 'Netralisir asam lambung',
+        color: '#3742fa'
+      }
+    ];
+
+    let currentMix = [];
+    let quizCurrent = 0, quizScore = 0;
+    let habits = JSON.parse(localStorage.getItem('dailyHabits') || '[]');
+
+    // Navigation
+    function showSection(sectionId) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Scroll smooth
+      document.querySelector(`#${sectionId}`).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Food Search
+    document.getElementById('food-search').addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      const dropdown = document.getElementById('search-dropdown');
+      
+      dropdown.innerHTML = '';
+      
+      if (query.length > 1) {
+        const matches = foodDatabase.filter(f => f.name.toLowerCase().includes(query));
+        matches.slice(0,5).forEach(food => {
+          const div = document.createElement('div');
+          div.className = 'dropdown-item';
+          div.innerHTML = `<i class="${getIcon(food.name)}"></i> ${food.name}`;
+          div.onclick = () => showFoodDetail(food);
+          dropdown.appendChild(div);
+        });
+        dropdown.classList.remove('hidden');
+      }
+    });
+
+    function showFoodDetail(food) {
+      document.getElementById('food-result').innerHTML = `
+        <div class="ph-badge" style="background: ${food.color + '20'}; color: ${food.color};">
+          <span style="font-size: 1.4rem;">${getPropertyEmoji(food.property)}</span>
+          ${food.property}
+        </div>
+        <div style="font-size: 2.5rem; margin: 1rem 0;">pH ${food.ph}</div>
+        <div style="background: var(--glass-dark); padding: 1.5rem; border-radius: 16px; margin: 1rem 0;">
+          <strong>Hidrolisis:</strong> ${food.hydrolysis}
+        </div>
+        <div class="ph-impact">
+          <strong>Dampak Tubuh:</strong> ${food.impact}
+        </div>
+      `;
+      document.getElementById('search-dropdown').classList.add('hidden');
+    }
+
+    function getPropertyEmoji(prop) {
+      return prop === 'Asam' ? '🔴' : prop === 'Basa' ? '🔵' : '🟢';
+    }
+
+    function getIcon(foodName) {
+      const icons = {
+        'Kopi': 'fas fa-coffee',
+        'Susu': 'fas fa-glass-whiskey',
+        'Soda': 'fas fa-wine-glass-alt',
+        default: 'fas fa-utensils'
+      };
+      return icons[foodName] || icons.default;
+    }
+
+    // Mixture
+    function toggleMix(item) {
+      const index = currentMix.indexOf(item);
+      if (index > -1) currentMix.splice(index, 1);
+      else currentMix.push(item);
+      
+      document.querySelectorAll('.mixture-card').forEach((card, i) => {
+        card.classList.toggle('active', currentMix.includes(['coffee', 'milk', 'soda', 'baking'][i]));
+      });
+
+      if (currentMix.length === 2) {
+        simulateMix();
+      }
+    }
+
+    function simulateMix() {
+      const mixMap = {
+        coffee: { pH: 5.0, prop: 'Asam' },
+        milk: { pH: 6.5, prop: 'Netral' },
+        soda: { pH: 2.5, prop: 'Asam' },
+        baking: { pH: 9.0, prop: 'Basa' }
+      };
+
+      const item1 = mixMap[currentMix[0]];
+      const item2 = mixMap[currentMix[1]];
+      
+      const avgPH = (item1.pH + item2.pH) / 2;
+      const resultProp = avgPH > 7 ? 'Basa' : avgPH < 7 ? 'Asam' : 'Netral';
+
+      document.getElementById('mix-result').innerHTML = `
+        <h3>${getEmoji(currentMix[0])} + ${getEmoji(currentMix[1])}</h3>
+        <div class="ph-display ${resultProp.toLowerCase()}">${avgPH.toFixed(1)}</div>
+        <p><strong>Hasil:</strong> ${resultProp}</p>
+        <p><em>Basa lebih dominan dalam hidrolisis</em></p>
+      `;
+    }
+
+    function getEmoji(item) {
+      const emojis = { coffee: '☕', milk: '🥛', soda: '🥤', baking: '🧂' };
+      return emojis[item] || '🍽️';
+    }
+
+    // pH Slider
+    document.getElementById('ph-range').addEventListener('input', function(e) {
+      const value = parseFloat(e.target.value);
+      const display = document.getElementById('ph-value');
+      display.textContent = value.toFixed(1);
+      
+      if (value < 7) {
+        display.className = 'ph-display acid';
+        display.innerHTML += '<br><small>Asam</small>';
+      } else if (value > 7) {
+        display.className = 'ph-display basic';
+        display.innerHTML += '<br><small>Basa</small>';
+      } else {
+        display.className = 'ph-display neutral';
+        display.innerHTML += '<br><small>Netral</small>';
+      }
+    });
+
+    // Quiz System
+    const quizData = [
+      { q: 'Kopi memiliki sifat...', options: ['Asam', 'Basa', 'Netral'], correct: 0 },
+      { q: 'Susu biasanya...', options: ['Asam', 'Basa', 'Netral'], correct: 2 },
+      { q: 'Baking soda adalah...', options: ['Asam', 'Basa', 'Netral'], correct: 1 },
+      { q: 'Soda berkarbonasi...', options: ['Asam', 'Basa', 'Netral'], correct: 0 },
+      { q: 'Hidrolisis NaCl menghasilkan...', options: ['Asam', 'Basa', 'Netral'], correct: 2 },
+      { q: 'Yang terbaik untuk gigi...', options: ['Kopi', 'Susu', 'Soda'], correct: 1 }
+    ];
+
+    let currentQuiz = 0;
+
+    function startQuiz() {
+      currentQuiz = 0;
+      showQuizQuestion();
+    }
+
+    function showQuizQuestion() {
+      const q = quizData[currentQuiz];
+      document.getElementById('quiz-container').innerHTML = `
+        <div class="question">
+          <div style="font-size: 1.4rem; margin-bottom: 1rem; font-weight: 600;">
+            Q${currentQuiz + 1}/${quizData.length}
+          </div>
+          <p>${q.q}</p>
+          <div class="quiz-options">
+            ${q.options.map((opt, i) => 
+              `<div class="quiz-option" onclick="selectQuizAnswer(${i})">${opt}</div>`
+            ).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function selectQuizAnswer(answer) {
+      const q = quizData[currentQuiz];
+      document.querySelectorAll('.quiz-option').forEach((opt, i) => {
+        opt.style.pointerEvents = 'none';
+        if (i === q.correct) opt.classList.add('correct');
+        if (i === answer && i !== q.correct) opt.classList.add('wrong');
+      });
+
+      setTimeout(() => {
+        currentQuiz++;
+        if (currentQuiz < quizData.length) showQuizQuestion();
+        else showQuizResults();
+      }, 1500);
+    }
+
+    function showQuizResults() {
+      // Simplified - full logic in full version
+      document.getElementById('quiz-container').innerHTML = `
+        <div style="text-align: center;">
+          <h2>Quiz Selesai! 🎉</h2>
+          <div style="font-size: 3rem; margin: 1rem 0;">🧠</div>
+          <p>Selamat! Anda paham pH makanan!</p>
+        </div>
+      `;
+    }
+
+    // Habits Tracker
+    function toggleHabit(item) {
+      const index = habits.indexOf(item);
+      if (index > -1) habits.splice(index, 1);
+      else habits.push(item);
+      localStorage.setItem('dailyHabits', JSON.stringify(habits));
+      updateHabitsUI();
+      analyzeDailyHabits();
+    }
+
+    function updateHabitsUI() {
+      document.querySelectorAll('.habit-item').forEach(item => {
+        const dataItem = item.getAttribute('data-habit');
+        item.classList.toggle('checked', habits.includes(dataItem));
+      });
+    }
+
+    function analyzeDailyHabits() {
+      const acidFoods = habits.filter(h => ['coffee', 'soda'].includes(h)).length;
+      const analysis = document.getElementById('habits-analysis');
+      
+      if (acidFoods >= 2) {
+        analysis.innerHTML = `
+          <div class="analysis-emoji">⚠️</div>
+          <h3>Hari ini cenderung ASAM</h3>
+          <p>Minum lebih banyak air atau susu untuk menyeimbangkan pH lambung</p>
+        `;
+      } else {
+        analysis.innerHTML = `
+          <div class="analysis-emoji">✅</div>
+          <h3>Kebiasaan harian sehat!</h3>
+          <p>Terus jaga keseimbangan asam-basa</p>
+        `;
+      }
+      analysis.classList.remove('hidden');
+    }
+
+    // Dark Mode
+    function toggleDarkMode() {
+      document.body.dataset.theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', document.body.dataset.theme);
+    }
+
+    // Intersection Observer for fade-in
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

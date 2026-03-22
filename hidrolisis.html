@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧪 Hidrolisis Garam dalam Kehidupan Sehari-hari - Makanan & Minuman</title>
+  <meta name="description" content="Website interaktif tentang hidrolisis garam di makanan minuman: definisi, contoh, simulasi, quiz.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Modern, Bright, Responsive Design */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    nav {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 1rem 0;
+      position: sticky; top: 0; z-index: 100;
+    }
+    nav ul {
+      list-style: none; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+    }
+    nav a {
+      text-decoration: none; color: #333; font-weight: 600; padding: 0.5rem 1rem;
+      border-radius: 25px; transition: all 0.3s; position: relative;
+    }
+    nav a:hover, nav a.active { 
+      background: linear-gradient(45deg, #ff6b6b, #ffd93d); color: #333; transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(255,107,107,0.4);
+    }
+    section {
+      min-height: 100vh; padding: 80px 20px; display: none; animation: fadeIn 0.8s ease;
+    }
+    section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); text-align: center; margin-bottom: 2rem; background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+    h2 { font-size: 2.2rem; margin-bottom: 1.5rem; color: #2d3436; font-weight: 700; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+    .card {
+      background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden;
+    }
+    .card:hover {
+      transform: translateY(-10px) scale(1.02); box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+    .card i { font-size: 4rem; color: #667eea; margin-bottom: 1rem; }
+    .card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+    .card p { color: #666; }
+    .sim-container {
+      background: rgba(255,255,255,0.95); border-radius: 20px; padding: 3rem; text-align: center; max-width: 600px; margin: 2rem auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    .salt-select { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 2rem; }
+    .salt-btn {
+      padding: 1rem 2rem; background: linear-gradient(45deg, #f093fb, #f5576c); color: white; border: none;
+      border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s;
+    }
+    .salt-btn:hover, .salt-btn.active { transform: scale(1.05); box-shadow: 0 10px 25px rgba(245,87,108,0.4); }
+    .result-ph {
+      font-size: 4rem; font-weight: 700; margin: 1rem 0; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); 
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .quiz-question { background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .quiz-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .quiz-btn { padding: 1rem 1.5rem; border: none; border-radius: 15px; background: #667eea; color: white; cursor: pointer; transition: all 0.3s; font-size: 1.1rem; }
+    .quiz-btn:hover { background: #764ba2; transform: translateY(-3px); }
+    .quiz-btn.correct { background: #51cf66 !important; }
+    .quiz-btn.wrong { background: #ff6b6b !important; }
+    #score { font-size: 2rem; font-weight: 700; text-align: center; margin-top: 2rem; color: #51cf66; }
+    .reaction { background: #f8f9ff; padding: 1.5rem; border-left: 5px solid #667eea; margin: 1rem 0; border-radius: 0 10px 10px 0; font-family: monospace; }
+    footer { background: rgba(0,0,0,0.8); color: white; text-align: center; padding: 2rem; }
+    @media (max-width: 768px) {
+      nav ul { flex-direction: column; align-items: center; gap: 1rem; }
+      .salt-select { flex-direction: column; align-items: center; }
+      section { padding: 60px 10px; }
+    }
+    .hidden { display: none; }
+    button { font-family: inherit; }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="#" onclick="showSection('home')" class="active"><i class="fas fa-home"></i> Beranda</a></li>
+      <li><a href="#" onclick="showSection('materi')"><i class="fas fa-book"></i> Materi</a></li>
+      <li><a href="#" onclick="showSection('contoh')"><i class="fas fa-utensils"></i> Contoh Harian</a></li>
+      <li><a href="#" onclick="showSection('simulasi')"><i class="fas fa-flask"></i> Simulasi</a></li>
+      <li><a href="#" onclick="showSection('quiz')"><i class="fas fa-question-circle"></i> Quiz</a></li>
+      <li><a href="#" onclick="showSection('kesimpulan')"><i class="fas fa-lightbulb"></i> Kesimpulan</a></li>
+    </ul>
+  </nav>
+
+  <!-- Home Section -->
+  <section id="home" class="active">
+    <div class="container">
+      <h1><i class="fas fa-flask"></i> Hidrolisis Garam di Makanan & Minuman</h1>
+      <p style="font-size: 1.3rem; text-align: center; color: white; max-width: 800px; margin: 0 auto 3rem;">
+        Garam yang kita makan setiap hari bereaksi dengan air membentuk larutan asam/basa. 
+        Ini mempengaruhi rasa makanan & kesehatan mulut!
+      </p>
+      <div style="text-align: center;">
+        <button onclick="showSection('materi')" class="salt-btn" style="font-size: 1.3rem; padding: 1.2rem 3rem;">
+          <i class="fas fa-play"></i> Mulai Belajar
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Materi Section -->
+  <section id="materi">
+    <div class="container">
+      <h1><i class="fas fa-book-open"></i> Apa Itu Hidrolisis Garam?</h1>
+      
+      <div class="card-grid">
+        <div class="card">
+          <i class="fas fa-info-circle"></i>
+          <h3>Definisi</h3>
+          <p>Hidrolisis garam adalah reaksi ion garam dengan air menghasilkan larutan <strong>asam, basa, atau netral</strong>.</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-divide"></i>
+          <h3>Jenis Garam</h3>
+          <p>
+            <strong>1. Garam Asam:</strong> Dari asam kuat + basa lemah (NaHCO₃)<br>
+            <strong>2. Garam Basa:</strong> Dari asam lemah + basa kuat (CH₃COONa)<br>
+            <strong>3. Garam Netral:</strong> Asam kuat + basa kuat (NaCl)
+          </p>
+        </div>
+        <div class="card">
+          <i class="fas fa-eye-dropper"></i>
+          <h3>Hubungan dengan Rasa</h3>
+          <p>
+            Asam = <strong>Asam/Pahit</strong><br>
+            Basa = <strong>Pahit/Sabun</strong><br>
+            Netral = <strong>Netral/Enak</strong>
+          </p>
+        </div>
+        <div class="card">
+          <i class="fas fa-cogs"></i>
+          <h3>Reaksi Contoh</h3>
+          <div class="reaction">
+            NaHCO₃ + H₂O ⇌ Na⁺ + HCO₃⁻ + H₂O ⇌ H₂CO₃ + OH⁻<br>
+            <small>(Baking soda → larutan BASA)</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contoh Harian -->
+  <section id="contoh">
+    <div class="container">
+      <h1><i class="fas fa-utensils"></i> Contoh di Makanan & Minuman</h1>
+      <div class="card-grid">
+        <div class="card">
+          <i class="fas fa-salt-shaker"></i>
+          <h3>Garam Dapur (NaCl)</h3>
+          <p>Netral - aman dimakan setiap hari!</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-pepper-hot"></i>
+          <h3>MSG (Na glutamate)</h3>
+          <p>Hidrolisis → rasa umami enak di makanan!</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-wine-glass-alt"></i>
+          <h3>Soda (NaHCO₃)</h3>
+          <p>Basa - buih + rasa segar di minuman!</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-cow"></i>
+          <h3>Susu (garam laktat)</h3>
+          <p>Asam lemah - rasa segar alami.</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-bread-slice"></i>
+          <h3>Baking Soda</h3>
+          <p>Basa kuat - kue mengembang + netral asam lambung!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simulasi -->
+  <section id="simulasi">
+    <div class="container">
+      <h1><i class="fas fa-vial"></i> Simulasi Hidrolisis</h1>
+      <div class="sim-container">
+        <p>Pilih garam, lihat sifat larutannya!</p>
+        <div class="salt-select">
+          <button class="salt-btn" onclick="simulasiGaram('NaCl')"><i class="fas fa-salt-shaker"></i> NaCl</button>
+          <button class="salt-btn" onclick="simulasiGaram('NaHCO3')"><i class="fas fa-wine-glass-alt"></i> NaHCO₃</button>
+          <button class="salt-btn" onclick="simulasiGaram('CH3COONa')"><i class="fas fa-cow"></i> CH₃COONa</button>
+          <button class="salt-btn" onclick="simulasiGaram('NH4Cl')"><i class="fas fa-pepper-hot"></i> NH₄Cl</button>
+        </div>
+        <div id="sim-result" style="font-size: 1.5rem; min-height: 100px;">
+          Pilih garam untuk simulasi...
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quiz -->
+  <section id="quiz">
+    <div class="container">
+      <h1><i class="fas fa-question-circle"></i> Quiz Interaktif</h1>
+      <div id="quiz-container">
+        <div class="quiz-question" id="quiz-question">Klik Mulai Quiz!</div>
+        <button onclick="startQuiz()" class="salt-btn" style="font-size: 1.3rem;">🚀 Mulai Quiz</button>
+        <div id="score" class="hidden"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kesimpulan -->
+  <section id="kesimpulan">
+    <div class="container">
+      <h1><i class="fas fa-lightbulb"></i> Kesimpulan</h1>
+      <div style="background: rgba(255,255,255,0.95); padding: 3rem; border-radius: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center;">
+        <h2>🌟 Hidrolisis garam ada di setiap makanan kita!</h2>
+        <p style="font-size: 1.2rem; max-width: 800px; margin: 2rem auto; color: #333;">
+          Rasa enak makanan (gurih, segar, kue mengembang) karena reaksi kimia sederhana ini. 
+          Pilih garam yang tepat untuk masakan sehat & lezat! 🧪✨
+        </p>
+        <div style="font-size: 3rem; margin: 2rem 0;">🎉 Selesai!</div>
+        <button onclick="showSection('home')" class="salt-btn" style="font-size: 1.2rem;">🏠 Kembali Beranda</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Hidrolisis Garam Interaktif | Dibuat dengan ❤️ untuk belajar kimia seru</p>
+  </footer>
+
+  <script>
+    // Navigation
+    function showSection(sectionId) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      event.target.classList.add('active');
+      window.scrollTo(0,0);
+    }
+
+    // Simulasi Garam
+    function simulasiGaram(garam) {
+      document.querySelectorAll('.salt-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const results = {
+        'NaCl': { ph: '7', sifat: 'NETRAL', rasa: 'Gurih netral', reaksi: 'Tidak bereaksi (kuat+kuat)' },
+        'NaHCO3': { ph: '8.3', sifat: 'BASA', rasa: 'Segar/buih', reaksi: 'HCO₃⁻ + H₂O ⇌ H₂CO₃ + OH⁻' },
+        'CH3COONa': { ph: '8.9', sifat: 'BASA', rasa: 'Manis ringan', reaksi: 'CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻' },
+        'NH4Cl': { ph: '5.1', sifat: 'ASAM', rasa: 'Asam tajam', reaksi: 'NH₄⁺ + H₂O ⇌ NH₃ + H₃O⁺' }
+      };
+      
+      const r = results[garam];
+      document.getElementById('sim-result').innerHTML = `
+        <div class="result-ph">${r.ph}</div>
+        <strong>${r.sifat}</strong><br>
+        Rasa: ${r.rasa}<br>
+        <div class="reaction">${r.reaksi}</div>
+      `;
+    }
+
+    // Quiz Data
+    const questions = [
+      { q: 'Garam dapur NaCl menghasilkan larutan...', a: ['Asam', 'Basa', 'Netral'], correct: 2 },
+      { q: 'Baking soda (NaHCO₃) larutan...', a: ['Asam', 'Basa', 'Netral'], correct: 1 },
+      { q: 'MSG bereaksi hidrolisis menjadi rasa...', a: ['Pahit', 'Umami', 'Manis'], correct: 1 },
+      { q: 'Reaksi basa: CH₃COO⁻ + H₂O → ...', a: ['H⁺', 'OH⁻', 'H₂'], correct: 1 },
+      { q: 'Susu terasa segar karena garam...', a: ['Asam lemah', 'Basa kuat', 'Netral'], correct: 0 },
+      { q: 'Hidrolisis garam mempengaruhi...', a: ['Warna', 'Rasa makanan', 'Tekstur'], correct: 1 }
+    ];
+    let currentQ = 0, score = 0;
+
+    function startQuiz() {
+      currentQ = 0; score = 0;
+      document.getElementById('score').classList.add('hidden');
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      if (currentQ >= 5) {
+        endQuiz();
+        return;
+      }
+      const q = questions[currentQ];
+      document.getElementById('quiz-question').innerHTML = `
+        <h3>Pertanyaan ${currentQ + 1}/5</h3>
+        <p>${q.q}</p>
+        <div class="quiz-options">
+          ${q.a.map((opt, i) => `<button class="quiz-btn" onclick="checkAnswer(${i})">${opt}</button>`).join('')}
+        </div>
+      `;
+    }
+
+    function checkAnswer(selected) {
+      const q = questions[currentQ];
+      document.querySelectorAll('.quiz-btn').forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.correct) btn.classList.add('correct');
+        else if (i === selected) btn.classList.add('wrong');
+      });
+      if (selected === q.correct) score++;
+      setTimeout(() => {
+        currentQ++;
+        nextQuestion();
+      }, 1500);
+    }
+
+    function endQuiz() {
+      document.getElementById('quiz-question').innerHTML = `
+        <h2>🎉 Quiz Selesai!</h2>
+        <p>Skor: ${score}/5 (${Math.round(score/5*100)}%)</p>
+        <button onclick="startQuiz()" class="salt-btn">Ulangi Quiz</button>
+      `;
+      document.getElementById('score').textContent = `Skor Akhir: ${score}/5`;
+      document.getElementById('score').classList.remove('hidden');
+    }
+
+    // Smooth scroll & init
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        showSection(this.getAttribute('onclick').match(/'([^']+)'/)[1]);
+      });
+    });
+  </script>
+</body>
+</html>
